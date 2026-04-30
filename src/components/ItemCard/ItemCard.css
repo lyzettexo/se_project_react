@@ -1,0 +1,40 @@
+.card {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card__name {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border-radius: 4px;
+  padding: 2px 12px;
+  font-size: 12px;
+  line-height: 1;
+  margin: 0;
+  z-index: 1;
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media screen and (max-width: 627px) {
+  .card {
+    width: 164px;
+    height: 164px;
+  }
+
+  .card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}

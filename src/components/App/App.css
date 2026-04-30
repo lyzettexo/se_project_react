@@ -1,0 +1,24 @@
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("../../vendor/fonts/CabinetGrotesk-Regular.otf") format("opentype");
+}
+
+.page {
+  background-color: #f3f3f3;
+  padding: 0 40px;
+  font-family: "Cabinet Grotesk", sans-serif;
+}
+
+.page__content {
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 627px) {
+  .page {
+    padding: 0;
+  }
+  .page__content {
+    padding: 0 23px;
+  }
+}
