@@ -89,7 +89,7 @@
   align-self: flex-start;
   border-radius: 4px;
   background-color: #000;
-  opacity: 30%;
+  opacity: 0.3;
   color: #fff;
   cursor: pointer;
 }

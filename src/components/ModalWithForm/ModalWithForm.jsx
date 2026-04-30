@@ -4,12 +4,15 @@ function ModalWithForm({
   children,
   buttonText,
   title,
+  name,
   activeModal,
   closeActiveModal,
 }) {
   return (
     <div
-      className={`modal ${activeModal === "add-garment" ? "modal_opened" : ""}`}
+      className={`modal modal_type_${name} ${
+        activeModal === name ? "modal_opened" : ""
+      }`}
     >
       <div className="modal__content">
         <h2 className="modal__title">{title}</h2>
@@ -17,10 +20,11 @@ function ModalWithForm({
           onClick={closeActiveModal}
           type="button"
           className="modal__close"
+          aria-label="Close modal"
         >
           ×
         </button>
-        <form className="modal__form">
+        <form className="modal__form" name={name}>
           {children}
           <button type="submit" className="modal__submit">
             {buttonText}

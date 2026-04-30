@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { coordinates, APIkey } from "../../utils/constants";
+import { coordinates, apiKey } from "../../utils/constants";
+import { defaultClothingItems } from "../../utils/constants";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
@@ -11,9 +12,11 @@ import Footer from "../Footer/Footer";
 function App() {
   const [weatherData, setWeatherData] = useState({
     type: "",
-    temp: { F: 999, C: 999 },
+    temp: { F: 999 },
     city: "",
   });
+
+  const [clothingItems, setClothingItems] = useState(defaultClothingItems);
   const [activeModal, setActiveModal] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
 
@@ -31,10 +34,9 @@ function App() {
   };
 
   useEffect(() => {
-    getWeather(coordinates, APIkey)
+    getWeather(coordinates, apiKey)
       .then((data) => {
         const filteredData = filterWeatherData(data);
-        console.log(filteredData);
         setWeatherData(filteredData);
       })
       .catch(console.error);
@@ -44,10 +46,15 @@ function App() {
     <div className="page">
       <div className="page__content">
         <Header handleAddClick={handleAddClick} weatherData={weatherData} />
-        <Main weatherData={weatherData} handleCardClick={handleCardClick} />
+        <Main
+          weatherData={weatherData}
+          clothingItems={clothingItems}
+          handleCardClick={handleCardClick}
+        />
       </div>
       <ModalWithForm
-        buttonText="Add Garment"
+        name="add-garment"
+        buttonText="Add garment"
         title="New Garment"
         activeModal={activeModal}
         closeActiveModal={closeActiveModal}
@@ -61,17 +68,18 @@ function App() {
             className="modal__input"
             placeholder="Name"
             autoComplete="name"
+            required
           />
         </label>
         <label htmlFor="imageUrl" className="modal__label">
-          Image {""}
+          Image URL
           <input
-            type="text"
+            type="url"
             id="imageUrl"
             name="imageUrl"
             className="modal__input"
             placeholder="Image URL"
-            autoComplete="imageUrl"
+            required
           />
         </label>
         <fieldset className="modal__radio-buttons">
