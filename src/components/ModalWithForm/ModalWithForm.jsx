@@ -10,9 +10,8 @@ function ModalWithForm({
 }) {
   return (
     <div
-      className={`modal modal_type_${name} ${
-        activeModal === name ? "modal_opened" : ""
-      }`}
+      className={`modal modal_type_${name} 
+      ${activeModal === name ? "modal_opened" : ""}`}
     >
       <div className="modal__content">
         <h2 className="modal__title">{title}</h2>
