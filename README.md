@@ -27,9 +27,20 @@ WTWR is a React app that displays current weather and recommends clothing items 
 
 https://lyzettexo.github.io/se_project_react/
 
+## Backend Repository
+
+The backend for this project can be found here:
+
+https://github.com/lyzettexo/se_project_express
+
 ## Running the Project Locally
 
 ```bash
 npm install
 npm run dev
 ```
+
+## Project Pitch Video
+
+Check out [this video](https://drive.google.com/file/d/1ZmYQV--01rELFmuzUG3oXm8NJjKZzUyG/view?usp=drive_link),
+where I describe my project and some challenges I faced while building it.

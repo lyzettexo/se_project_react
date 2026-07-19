@@ -1,31 +1,28 @@
 import "./ModalWithForm.css";
 
 function ModalWithForm({
-  children,
-  buttonText,
   title,
   name,
-  activeModal,
-  closeActiveModal,
+  buttonText = "Save",
+  onClose,
+  isOpen,
+  children,
+  onSubmit,
+  isValid,
 }) {
   return (
-    <div
-      className={`modal modal_type_${name} 
-      ${activeModal === name ? "modal_opened" : ""}`}
-    >
+    <div className={`modal modal_type_${name} ${isOpen ? "modal_opened" : ""}`}>
       <div className="modal__content">
-        <h2 className="modal__title">{title}</h2>
-        <button
-          onClick={closeActiveModal}
-          type="button"
-          className="modal__close"
-          aria-label="Close modal"
-        >
+        <button type="button" className="modal__close" onClick={onClose}>
           ×
         </button>
-        <form className="modal__form" name={name}>
+
+        <h3 className="modal__title">{title}</h3>
+
+        <form className="modal__form" onSubmit={onSubmit} name={name}>
           {children}
-          <button type="submit" className="modal__submit">
+
+          <button type="submit" className="modal__button" disabled={!isValid}>
             {buttonText}
           </button>
         </form>

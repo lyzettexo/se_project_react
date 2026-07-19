@@ -1,3 +1,5 @@
+import sun from "../assets/sun.jpg";
+
 export const defaultClothingItems = [
   {
     _id: 1,
@@ -103,3 +105,27 @@ export const coordinates = {
 };
 
 export const apiKey = "4ce982f512c4cf8a55b1169b2d0820c2";
+
+export const weatherOptions = [
+  {
+    day: true,
+    condition: "clear",
+    url: sun,
+  },
+  {
+    day: false,
+    condition: "clear",
+    url: sun,
+  },
+];
+
+export const defaultWeatherOption = {
+  day: {
+    url: sun,
+    condition: "default day",
+  },
+  night: {
+    url: sun,
+    condition: "default night",
+  },
+};

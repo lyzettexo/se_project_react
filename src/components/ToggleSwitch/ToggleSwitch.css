@@ -1,0 +1,70 @@
+.toggle-switch {
+  width: 56px;
+  height: 28px;
+  border: 2px solid black;
+  border-radius: 20px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.toggle-switch__checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch__circle {
+  background-color: black;
+  width: 28px;
+  height: 28px;
+  position: absolute;
+  border-radius: 50%;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+.toggle-switch__text {
+  color: gray;
+  position: absolute;
+  top: 5px;
+  z-index: 2;
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.toggle-switch__text_F {
+  left: 9px;
+}
+
+.toggle-switch__text_C {
+  right: 9px;
+}
+
+.toggle-switch__text_color_white {
+  color: white;
+}
+
+.toggle-switch__checkbox:checked ~ .toggle-switch__circle {
+  transform: translateX(28px);
+}
+
+.toggle-switch:active .toggle-switch__circle {
+  transform: scale(1.1);
+}
+
+.toggle-switch:active
+  .toggle-switch__checkbox:checked
+  ~ .toggle-switch__circle {
+  transform: translateX(28px) scale(1.5);
+}
+
+.toggle-switch:active .toggle-switch__text_F {
+  transform: scale(1.4);
+}

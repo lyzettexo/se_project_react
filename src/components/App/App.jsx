@@ -1,27 +1,48 @@
-import { useEffect, useState } from "react";
 import "./App.css";
+import { useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import { coordinates, apiKey } from "../../utils/constants";
-import { defaultClothingItems } from "../../utils/constants";
+import { getWeather, filterWeatherData } from "../../utils/weatherApi";
+
 import Header from "../Header/Header";
 import Main from "../Main/Main";
-import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import ItemModal from "../ItemModal/ItemModal";
-import { getWeather, filterWeatherData } from "../../utils/weatherApi";
+import AddItemModal from "../AddItemModal/AddItemModal";
+import Profile from "../Profile/Profile";
 import Footer from "../Footer/Footer";
+import {
+  addItem,
+  getItemList,
+  removeItem,
+  updateUser,
+  addCardLike,
+  removeCardLike,
+} from "../../utils/api";
+import LoginModal from "../LoginModal/LoginModal";
+import { register, login, checkToken } from "../../utils/auth";
+import RegisterModal from "../RegisterModal/RegisterModal";
+import EditProfileModal from "../EditProfileModal/EditProfileModal";
 
 function App() {
   const [weatherData, setWeatherData] = useState({
     type: "",
-    temp: { F: 999 },
+    temp: { F: 999, C: 999 },
     city: "",
+    condition: "",
+    isDay: false,
   });
 
-  const [clothingItems, setClothingItems] = useState(defaultClothingItems);
+  const [clothingItems, setClothingItems] = useState([]);
   const [activeModal, setActiveModal] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
+  const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
+  const [currentUser, setCurrentUser] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleAddClick = () => {
-    setActiveModal("add-garment");
+    setActiveModal("create");
   };
 
   const handleCardClick = (card) => {
@@ -29,8 +50,100 @@ function App() {
     setActiveModal("preview");
   };
 
+  const onAddItem = (inputValues) => {
+    const newCardData = {
+      name: inputValues.name,
+      imageUrl: inputValues.imageUrl,
+      weather: inputValues.weather,
+    };
+    addItem(newCardData)
+      .then((data) => {
+        setClothingItems((prevItems) => [data, ...prevItems]);
+        closeActiveModal();
+      })
+      .catch(console.error);
+  };
+
+  const handleEditProfileClick = () => {
+    setActiveModal("edit-profile");
+  };
+
   const closeActiveModal = () => {
     setActiveModal("");
+  };
+
+  const handleUpdateUser = (userData) => {
+    updateUser(userData)
+      .then((updatedUser) => {
+        setCurrentUser(updatedUser);
+        closeActiveModal();
+      })
+      .catch(console.error);
+  };
+
+  const handleRegister = (userData) => {
+    register(userData)
+      .then(() => {
+        closeActiveModal();
+      })
+      .catch(console.error);
+  };
+
+  const handleRegisterClick = () => {
+    setActiveModal("register");
+  };
+
+  const handleToggleSwitchChange = () => {
+    setCurrentTemperatureUnit(currentTemperatureUnit === "F" ? "C" : "F");
+  };
+
+  const handleLogin = ({ email, password }) => {
+    login({ email, password })
+      .then((data) => {
+        localStorage.setItem("jwt", data.token);
+        return checkToken(data.token);
+      })
+      .then((userData) => {
+        setCurrentUser(userData);
+        setIsLoggedIn(true);
+        closeActiveModal();
+      })
+      .catch(console.error);
+  };
+
+  const handleLoginClick = () => {
+    setActiveModal("login");
+  };
+
+  const handleCardLike = ({ _id, isLiked }) => {
+    const token = localStorage.getItem("jwt");
+
+    const likeMethod = isLiked ? removeCardLike : addCardLike;
+
+    likeMethod(_id, token)
+      .then((updatedCard) => {
+        setClothingItems((cards) =>
+          cards.map((item) => (item._id === _id ? updatedCard : item))
+        );
+      })
+      .catch(console.error);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("jwt");
+    setIsLoggedIn(false);
+    setCurrentUser({});
+  };
+
+  const handleCardDelete = (card) => {
+    removeItem(card._id)
+      .then(() => {
+        setClothingItems((cards) =>
+          cards.filter((item) => item._id !== card._id)
+        );
+        closeActiveModal();
+      })
+      .catch(console.error);
   };
 
   useEffect(() => {
@@ -40,89 +153,116 @@ function App() {
         setWeatherData(filteredData);
       })
       .catch(console.error);
+
+    getItemList()
+      .then((data) => {
+        setClothingItems(data);
+      })
+      .catch(console.error);
+
+    const token = localStorage.getItem("jwt");
+
+    if (token) {
+      checkToken(token)
+        .then((userData) => {
+          setCurrentUser(userData);
+          setIsLoggedIn(true);
+        })
+        .catch(() => {
+          localStorage.removeItem("jwt");
+          setCurrentUser({});
+          setIsLoggedIn(false);
+        });
+    }
   }, []);
 
   return (
-    <div className="page">
-      <div className="page__content">
-        <Header handleAddClick={handleAddClick} weatherData={weatherData} />
-        <Main
-          weatherData={weatherData}
-          clothingItems={clothingItems}
-          handleCardClick={handleCardClick}
-        />
-      </div>
-      <ModalWithForm
-        name="add-garment"
-        buttonText="Add garment"
-        title="New Garment"
-        activeModal={activeModal}
-        closeActiveModal={closeActiveModal}
-      >
-        <label htmlFor="name" className="modal__label">
-          Name
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="modal__input"
-            placeholder="Name"
-            autoComplete="name"
-            required
+    <CurrentTemperatureUnitContext.Provider
+      value={{ currentTemperatureUnit, handleToggleSwitchChange }}
+    >
+      <CurrentUserContext.Provider value={currentUser}>
+        <div className="page">
+          <div className="page__content">
+            <Header
+              handleAddClick={handleAddClick}
+              weatherData={weatherData}
+              isLoggedIn={isLoggedIn}
+              onRegisterClick={handleRegisterClick}
+              onLoginClick={handleLoginClick}
+            />
+
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Main
+                    weatherData={weatherData}
+                    cards={clothingItems}
+                    onCardClick={handleCardClick}
+                    onCardDelete={handleCardDelete}
+                    onCardLike={handleCardLike}
+                  />
+                }
+              />
+
+              <Route
+                path="/profile"
+                element={
+                  isLoggedIn ? (
+                    <Profile
+                      cards={clothingItems}
+                      onCardClick={handleCardClick}
+                      onCardDelete={handleCardDelete}
+                      onAddNewClick={handleAddClick}
+                      onEditProfile={handleEditProfileClick}
+                      onCardLike={handleCardLike}
+                      onSignOut={handleSignOut}
+                    />
+                  ) : (
+                    <Navigate to="/" replace />
+                  )
+                }
+              />
+            </Routes>
+
+            <Footer />
+          </div>
+
+          <RegisterModal
+            isOpen={activeModal === "register"}
+            onClose={closeActiveModal}
+            onRegister={handleRegister}
           />
-        </label>
-        <label htmlFor="imageUrl" className="modal__label">
-          Image URL
-          <input
-            type="url"
-            id="imageUrl"
-            name="imageUrl"
-            className="modal__input"
-            placeholder="Image URL"
-            required
+
+          <EditProfileModal
+            isOpen={activeModal === "edit-profile"}
+            onClose={closeActiveModal}
+            onUpdateUser={handleUpdateUser}
           />
-        </label>
-        <fieldset className="modal__radio-buttons">
-          <legend className="modal__legend">Select the weather type:</legend>
-          <label className="modal__radio-label modal__radio_type_radio">
-            <input
-              id="hot"
-              type="radio"
-              name="weatherType"
-              value="hot"
-              className="modal__radio-input"
+
+          <LoginModal
+            isOpen={activeModal === "login"}
+            onClose={closeActiveModal}
+            onLogin={handleLogin}
+          />
+
+          <AddItemModal
+            isOpen={activeModal === "create"}
+            onClose={closeActiveModal}
+            onAddItem={onAddItem}
+          />
+
+          {activeModal === "preview" && (
+            <ItemModal
+              card={selectedCard}
+              onClose={closeActiveModal}
+              isOpen={activeModal === "preview"}
+              onDeleteItem={handleCardDelete}
             />
-            Hot
-          </label>
-          <label className="modal__radio-label modal__radio_type_radio">
-            <input
-              id="warm"
-              type="radio"
-              name="weatherType"
-              value="warm"
-              className="modal__radio-input"
-            />
-            Warm
-          </label>
-          <label className="modal__radio-label modal__radio_type_radio">
-            <input
-              id="cold"
-              type="radio"
-              name="weatherType"
-              value="cold"
-              className="modal__radio-input"
-            />
-            Cold
-          </label>
-        </fieldset>
-      </ModalWithForm>
-      <ItemModal
-        activeModal={activeModal}
-        closeActiveModal={closeActiveModal}
-        card={selectedCard}
-      />
-      <Footer />
-    </div>
+          )}
+        </div>
+      </CurrentUserContext.Provider>
+    </CurrentTemperatureUnitContext.Provider>
   );
 }
 

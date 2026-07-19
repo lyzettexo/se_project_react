@@ -1,0 +1,48 @@
+.sidebar {
+  width: 230px;
+  flex-shrink: 0;
+}
+
+.sidebar__profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sidebar__user-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sidebar__avatar {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.sidebar__edit-button,
+.sidebar__signout-button {
+  display: block;
+  padding: 0;
+  margin: 0 0 8px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 627px) {
+  .sidebar {
+    width: 100%;
+  }
+
+  .sidebar__user-name {
+    font-size: 24px;
+  }
+}
