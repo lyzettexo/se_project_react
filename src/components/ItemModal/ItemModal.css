@@ -15,14 +15,6 @@
   object-position: center;
 }
 
-.modal__image {
-  width: 100%;
-  height: 498px;
-  object-fit: cover;
-  display: block;
-  object-position: center;
-}
-
 .modal__title-row {
   display: flex;
   justify-content: space-between;
@@ -30,16 +22,10 @@
   margin-bottom: 12px;
 }
 
-.modal__close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  border: none;
-  background: transparent;
+.modal__content_type_image .modal__close {
+  color: white;
   font-size: 34px;
   line-height: 1;
-  color: white;
-  cursor: pointer;
   z-index: 2;
 }
 

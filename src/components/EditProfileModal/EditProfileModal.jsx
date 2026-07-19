@@ -17,6 +17,10 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateUser }) => {
   function handleSubmit(evt) {
     evt.preventDefault();
 
+    if (!isValid) {
+      return;
+    }
+
     onUpdateUser(values);
   }
 
@@ -37,7 +41,7 @@ const EditProfileModal = ({ isOpen, onClose, onUpdateUser }) => {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      isValid={true}
+      isValid={isValid}
     >
       <label htmlFor="profile-name" className="modal__label">
         Name

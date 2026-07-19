@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import CurrentTemperatureUnitContext from "../../contexts/CurrentTemperatureUnitContext";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import { coordinates, apiKey } from "../../utils/constants";
@@ -11,6 +11,7 @@ import Main from "../Main/Main";
 import ItemModal from "../ItemModal/ItemModal";
 import AddItemModal from "../AddItemModal/AddItemModal";
 import Profile from "../Profile/Profile";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import Footer from "../Footer/Footer";
 import {
   addItem,
@@ -41,8 +42,14 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleAddClick = () => {
-    setActiveModal("create");
+    if (isLoggedIn) {
+      setActiveModal("create");
+    } else {
+      setActiveModal("login");
+    }
   };
 
   const handleCardClick = (card) => {
@@ -83,9 +90,12 @@ function App() {
 
   const handleRegister = (userData) => {
     register(userData)
-      .then(() => {
-        closeActiveModal();
-      })
+      .then(() =>
+        handleLogin({
+          email: userData.email,
+          password: userData.password,
+        })
+      )
       .catch(console.error);
   };
 
@@ -98,7 +108,7 @@ function App() {
   };
 
   const handleLogin = ({ email, password }) => {
-    login({ email, password })
+    return login({ email, password })
       .then((data) => {
         localStorage.setItem("jwt", data.token);
         return checkToken(data.token);
@@ -107,8 +117,12 @@ function App() {
         setCurrentUser(userData);
         setIsLoggedIn(true);
         closeActiveModal();
+        navigate("/");
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        throw err;
+      });
   };
 
   const handleLoginClick = () => {
@@ -208,7 +222,7 @@ function App() {
               <Route
                 path="/profile"
                 element={
-                  isLoggedIn ? (
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
                     <Profile
                       cards={clothingItems}
                       onCardClick={handleCardClick}
@@ -218,9 +232,7 @@ function App() {
                       onCardLike={handleCardLike}
                       onSignOut={handleSignOut}
                     />
-                  ) : (
-                    <Navigate to="/" replace />
-                  )
+                  </ProtectedRoute>
                 }
               />
             </Routes>
@@ -246,11 +258,13 @@ function App() {
             onLogin={handleLogin}
           />
 
-          <AddItemModal
-            isOpen={activeModal === "create"}
-            onClose={closeActiveModal}
-            onAddItem={onAddItem}
-          />
+          {isLoggedIn && (
+            <AddItemModal
+              isOpen={activeModal === "create"}
+              onClose={closeActiveModal}
+              onAddItem={onAddItem}
+            />
+          )}
 
           {activeModal === "preview" && (
             <ItemModal

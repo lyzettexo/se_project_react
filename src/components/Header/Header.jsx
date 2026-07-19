@@ -43,32 +43,34 @@ const Header = ({
       >
         <ToggleSwitch />
 
-        <button
-          onClick={handleAddClick}
-          type="button"
-          className="header__add-clothes-button"
-        >
-          + Add Clothes
-        </button>
-
         {isLoggedIn ? (
-          <NavLink className="header__nav-link" to="/profile">
-            <div className="header__user-container">
-              <p className="header__username">{currentUser.name}</p>
+          <>
+            <button
+              onClick={handleAddClick}
+              type="button"
+              className="header__add-clothes-button"
+            >
+              + Add Clothes
+            </button>
 
-              {currentUser.avatar ? (
-                <img
-                  src={currentUser.avatar}
-                  alt={currentUser.name}
-                  className="header__avatar"
-                />
-              ) : (
-                <div className="header__avatar-placeholder">
-                  {currentUser.name?.charAt(0).toUpperCase()}
-                </div>
-              )}
-            </div>
-          </NavLink>
+            <NavLink className="header__nav-link" to="/profile">
+              <div className="header__user-container">
+                <p className="header__username">{currentUser.name}</p>
+
+                {currentUser.avatar ? (
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser.name}
+                    className="header__avatar"
+                  />
+                ) : (
+                  <div className="header__avatar-placeholder">
+                    {currentUser.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+            </NavLink>
+          </>
         ) : (
           <div className="header__auth-buttons">
             <button
