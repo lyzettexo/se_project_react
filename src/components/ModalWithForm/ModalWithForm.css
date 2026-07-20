@@ -33,9 +33,31 @@
   position: absolute;
   top: 20px;
   right: 20px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
   border: none;
-  background: transparent;
+  background-color: transparent;
   cursor: pointer;
+}
+
+.modal__close::before,
+.modal__close::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 16px;
+  height: 2px;
+  background-color: #000;
+}
+
+.modal__close::before {
+  transform: rotate(45deg);
+}
+
+.modal__close::after {
+  transform: rotate(-45deg);
 }
 
 .modal__form {
@@ -43,6 +65,7 @@
   flex-direction: column;
   width: 100%;
 }
+
 .modal__button {
   width: 124px;
   height: 36px;
@@ -53,6 +76,30 @@
   background-color: #000;
   color: #fff;
   cursor: pointer;
+}
+
+.modal__button-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal__secondary-button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #000;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.modal__secondary-button:hover {
+  opacity: 1;
 }
 
 .modal__button:hover {
@@ -71,11 +118,11 @@
 
 .modal__label {
   display: flex;
-  font-weight: 700;
   flex-direction: column;
   margin-bottom: 24px;
   font-size: 16px;
   line-height: 20px;
+  font-weight: 700;
 }
 
 .modal__input {

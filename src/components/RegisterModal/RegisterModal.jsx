@@ -1,14 +1,15 @@
+import { useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import { useForm } from "../../hooks/useForm";
-import { useEffect } from "react";
 
-const RegisterModal = ({ isOpen, onRegister, onClose }) => {
+const RegisterModal = ({ isOpen, onRegister, onClose, onLoginClick }) => {
   const defaultValues = {
     name: "",
     avatar: "",
     email: "",
     password: "",
   };
+
   const { values, setValues, handleChange, isValid } = useForm(defaultValues);
 
   function handleSubmit(evt) {
@@ -20,13 +21,15 @@ const RegisterModal = ({ isOpen, onRegister, onClose }) => {
     if (!isOpen) {
       setValues(defaultValues);
     }
-  }, [isOpen]);
+  }, [isOpen, setValues]);
 
   return (
     <ModalWithForm
       name="register"
       buttonText="Sign up"
       title="Sign up"
+      secondaryButtonText="Log In"
+      onSecondaryClick={onLoginClick}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}

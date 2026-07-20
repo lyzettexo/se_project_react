@@ -15,33 +15,48 @@
   object-position: center;
 }
 
-.modal__title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+.modal__content_type_image .modal__close {
+  top: 20px;
+  right: 20px;
+  z-index: 2;
 }
 
-.modal__content_type_image .modal__close {
-  color: white;
-  font-size: 34px;
-  line-height: 1;
-  z-index: 2;
+.modal__content_type_image .modal__close::before,
+.modal__content_type_image .modal__close::after {
+  background-color: #fff;
 }
 
 .modal__delete-button {
   border: none;
-  background: transparent;
+  background-color: transparent;
   padding: 0;
   color: #ff4d00;
   cursor: pointer;
+  font-family: inherit;
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
 }
 
 .modal__footer {
-  padding: 20px 32px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 16px 16px;
+}
+
+.modal__delete-button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #ff4d00;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .modal__caption {

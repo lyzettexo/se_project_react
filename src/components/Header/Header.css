@@ -23,7 +23,7 @@
 }
 
 .header__nav-link {
-  color: black;
+  color: #000;
   text-decoration: none;
   font-size: 16px;
   font-weight: 500;
@@ -37,9 +37,43 @@
   margin: 0;
 }
 
+.header__auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .header__add-clothes-button {
   margin: 0;
+  padding: 0;
   border: none;
+  background-color: transparent;
+  color: #000;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.header__signup-button,
+.header__signin-button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #000;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.header__add-clothes-button:hover,
+.header__signup-button:hover,
+.header__signin-button:hover {
+  opacity: 0.6;
 }
 
 .header__user-container {
@@ -55,7 +89,7 @@
 .header__menu-line {
   width: 20px;
   height: 2px;
-  background-color: black;
+  background-color: #000;
   border-radius: 2px;
 }
 
@@ -80,6 +114,11 @@
     margin: 0;
   }
 
+  .header__auth-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
   .header__add-clothes-button,
   .header__user-container {
     display: none;
@@ -91,13 +130,12 @@
     justify-content: center;
     align-items: center;
     gap: 6px;
-
     width: 44px;
     height: 44px;
-
     background-color: #fff;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
   }
 }
 
