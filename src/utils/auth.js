@@ -1,6 +1,9 @@
 import { handleServerResponse } from "./api";
 
-const baseUrl = "http://localhost:3001";
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://api.wear2what.crabdance.com"
+    : "http://localhost:3001";
 
 const register = ({ name, avatar, email, password }) => {
   return fetch(`${baseUrl}/signup`, {
